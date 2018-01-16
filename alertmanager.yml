@@ -1,0 +1,21 @@
+global:
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@example.org'
+  smtp_require_tls: false
+
+# The root route on which each incoming alert enters.
+route:
+  # The root route must not have any matchers as it is the entry point for
+  # all alerts. It needs to have a receiver configured so alerts that do not
+  # match any of the sub-routes are sent to someone.
+  receiver: 'team-X-mails'
+  group_wait: 1s # how long to wait before the first notification from a group is fiyring to wait before sending other notifications for that group, default 30s
+  group_interval: 1s # how long to wait between messages from the same group, default 5m,
+  repeat_interval: 1s # if an alert was successfully sent, wait repeat_interval to resend it. default 4H
+  # See route.go for defaults
+
+receivers:
+- name: 'team-X-mails'
+  email_configs:
+  - to: 'team-X+alerts@example.org, team-Y+alerts@example.org'
